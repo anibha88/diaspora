@@ -102,8 +102,8 @@ module Configuration
       {url: redis_url}
     end
 
-    def sidekiq_log
-      path = Pathname.new environment.sidekiq.log.get
+    def good_job_log
+      path = Pathname.new environment.good_job.log.get
       path = Rails.root.join(path) unless path.absolute?
       path.to_s
     end

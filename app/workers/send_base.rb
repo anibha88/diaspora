@@ -2,9 +2,15 @@
 
 module Workers
   class SendBase < Base
-    sidekiq_options queue: :medium, retry: 0
+    queue_as :medium
 
-    MAX_RETRIES = AppConfig.environment.sidekiq.retry.get.to_i
+    # Custom retry loop: SendBase reschedules itself via perform_in with an
+    # explicit exponential backoff (see #seconds_to_delay). We do NOT want
+    # ActiveJob's built-in retry mechanism to also retry on top of that, so
+    # override the retry policy installed by Workers::Base to a single attempt.
+    retry_on StandardError, attempts: 1
+
+    MAX_RETRIES = AppConfig.environment.good_job.retry.get.to_i
 
     protected
 
@@ -24,7 +30,7 @@ module Workers
       ((count + 3)**4) + (rand(30) * (count + 1))
     end
 
-    # send job to the dead job queue
+    # send job to the discarded/preserved set
     class MaxRetriesReached < RuntimeError
     end
   end

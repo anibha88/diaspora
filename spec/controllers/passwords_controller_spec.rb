@@ -26,7 +26,7 @@ describe Devise::PasswordsController, type: :controller do
         post :create, params: {user: {email: alice.email}}
         expect(response).to redirect_to(new_user_session_path)
       end
-      it "sends email (enqueued to Sidekiq)" do
+      it "sends email (enqueued via ActiveJob)" do
         expect(Workers::ResetPassword).to receive(:perform_async).with(alice.id)
         post :create, params: {user: {email: alice.email}}
       end

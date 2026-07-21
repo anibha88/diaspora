@@ -32,32 +32,11 @@ namespace :migrations do
     }
   end
 
-  CURRENT_QUEUES = %w(urgent high medium low default).freeze
-
-  desc "Migrate sidekiq jobs, retries, scheduled and dead jobs from any legacy queue to "\
-       "the default queue (retries all dead jobs)"
+  desc "Removed: this used to move Sidekiq jobs between legacy queues. " \
+       "GoodJob (DB-backed) is now the job runner and has no equivalent " \
+       "concept — retry queued jobs from the /good_job dashboard instead."
   task :legacy_queues do
-    Sidekiq.redis = AppConfig.get_redis_options
-
-    # Push all retries, scheduled and dead jobs to their queues
-    Sidekiq::RetrySet.new.retry_all
-    Sidekiq::DeadSet.new.retry_all
-    Sidekiq::ScheduledSet.new.reject {|job| CURRENT_QUEUES.include? job.queue }.each(&:add_to_queue)
-
-    # Move all jobs from legacy queues to the default queue
-    Sidekiq::Queue.all.each do |queue|
-      next if CURRENT_QUEUES.include? queue.name
-
-      puts "Migrating #{queue.size} jobs from #{queue.name} to default..."
-      queue.each do |job|
-        job.item["queue"] = "default"
-        Sidekiq::Client.push(job.item)
-        job.delete
-      end
-
-      # Delete the queue
-      queue.clear
-    end
+    warn "rake migrations:legacy_queues is a no-op since the GoodJob migration."
   end
 
   desc "Run uncompleted account deletions"

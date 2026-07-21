@@ -3,7 +3,7 @@
 module Workers
   module Mail
     class NotifierBase < Base
-      sidekiq_options queue: :low
+      queue_as :low
 
       def perform(*args)
         Notifier.send_notification(self.class.name.demodulize.underscore, *args).deliver_now

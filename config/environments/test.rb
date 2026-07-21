@@ -59,6 +59,11 @@ Rails.application.configure do
   # ActionMailer::Base.deliveries array.
   config.action_mailer.delivery_method = :test
 
+  # Use ActiveJob's in-memory test adapter so specs can assert on enqueued
+  # jobs (have_enqueued_job) and drain them synchronously via
+  # perform_enqueued_jobs. Replaces Sidekiq::Testing (fake mode).
+  config.active_job.queue_adapter = :test
+
   # Print deprecation notices to the stderr.
   config.active_support.deprecation = :stderr
 

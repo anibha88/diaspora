@@ -2,7 +2,7 @@
 
 module Workers
   class CleanupOldExports < Base
-    sidekiq_options queue: :low
+    queue_as :low
 
     def perform
       User.where("exported_at < ?", 14.days.ago).each do |user|

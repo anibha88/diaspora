@@ -2,11 +2,14 @@
 
 module Workers
   class ReceiveBase < Base
-    sidekiq_options queue: :urgent
+    queue_as :urgent
 
     include Diaspora::Logging
 
-    # don't retry for errors that will fail again
+    # Federation errors that will fail again on retry: swallow them here
+    # rather than letting ActiveJob push the job back onto the queue.
+    # This preserves the pre-migration Sidekiq behavior (retry filter in
+    # #filter_errors_for_retry).
     def filter_errors_for_retry
       yield
     rescue DiasporaFederation::Entity::ValidationError,

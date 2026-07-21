@@ -1,0 +1,15 @@
+<% require_relative 'load_config' %>
+---
+# GoodJob picks up jobs across all five queues, giving strictly higher priority
+# to queues listed first. Ordered list ("urgent;high;medium;low;default")
+# preserves the priority order previously enforced by Sidekiq's queue ordering.
+:queues: "urgent;high;medium;low;default"
+:max_threads: <%= AppConfig.environment.good_job.concurrency.to_i %>
+:poll_interval: 5
+# Keep completed job records around for observability (dashboard replaces the
+# Sidekiq dead-set). `cleanup_preserved_jobs_before_seconds_ago` mirrors the
+# retention window that used to be governed by :dead_timeout_in_seconds.
+:preserve_job_records: true
+:cleanup_preserved_jobs_before_seconds_ago: <%= AppConfig.environment.good_job.dead_jobs_timeout.to_i %>
+:cleanup_discarded_jobs: false
+:shutdown_timeout: 30

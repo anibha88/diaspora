@@ -2,7 +2,7 @@
 
 module Workers
   class CleanCachedFiles < Base
-    sidekiq_options queue: :low
+    queue_as :low
 
     def perform
       CarrierWave.clean_cached_files!

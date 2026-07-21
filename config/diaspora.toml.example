@@ -60,14 +60,14 @@
 ## will be redirected to https://images.example.org/uploads/images/
 #image_redirect_url = "https://images.example.org"
 
-## Sidekiq - background processing
-[configuration.environment.sidekiq]
+## GoodJob - background processing (DB-backed via ActiveJob)
+[configuration.environment.good_job]
 
-## Number of parallel threads Sidekiq uses (default=5).
+## Number of parallel threads GoodJob uses (default=5).
 ## If you touch this, please set the pool setting in your database.yml
 ## to a value that's at minimum close to this! You can safely increase
 ## it to 25 and more on a medium-sized pod. This applies per started
-## Sidekiq worker, so if you set it to 25 and start two workers, you'll
+## GoodJob worker, so if you set it to 25 and start two workers, you'll
 ## process up to 50 jobs in parallel.
 #concurrency = 5
 
@@ -78,26 +78,26 @@
 #retry = 10
 
 ## Lines of backtrace that are stored on failure (default=15).
-## Set n to the required value. Set this to false to reduce Redis memory
-## usage (and log size) if you're not interested in this data.
+## Set n to the required value. Set this to false to reduce the size of
+## the good_jobs table (and log size) if you're not interested in this data.
 #backtrace = 15
 
-## Number of jobs to keep in the dead queue (default=5000).
-## Jobs get into the dead queue after they failed and exhausted all retries.
-## Increasing this setting will increase the memory usage of Redis.
-## Once gone from the dead queue, a failed job is permanently lost and
-## cannot be retried manually.
+## Number of jobs to keep in the discarded/preserved set (default=5000).
+## Jobs get preserved after they failed and exhausted all retries.
+## Increasing this setting will increase the size of the good_jobs table.
+## Once cleaned up, a failed job is permanently lost and cannot be retried
+## manually.
 #dead_jobs_limit = 1000
 
-## Number of seconds a job remains in the dead queue (default=3628800 (six weeks)).
-## Jobs get into the dead queue after they failed and exhausted all retries.
-## Increasing this setting will increase the memory usage of Redis.
-## Once gone from the dead queue, a failed job is permanently lost and
-## cannot be retried manually.
+## Number of seconds a job remains in the preserved set before cleanup
+## (default=3628800 (six weeks)). Jobs get preserved after they failed and
+## exhausted all retries. Increasing this setting will increase the size of
+## the good_jobs table. Once cleaned up, a failed job is permanently lost
+## and cannot be retried manually.
 #dead_jobs_timeout = 15552000 # 6 months
 
-## Log file for Sidekiq (default="log/sidekiq.log")
-#log = "log/sidekiq.log"
+## Log file for GoodJob (default="log/good_job.log")
+#log = "log/good_job.log"
 
 ## Use Amazon S3 instead of your local filesystem
 ## to handle uploaded pictures (disabled by default).
@@ -172,10 +172,10 @@
 ## requests fail.
 #web_timeout = 90
 
-## Number of Sidekiq worker processes (default=1).
+## Number of GoodJob worker processes (default=1).
 ## In most cases it is better to
-## increase environment.sidekiq.concurrency instead!
-#sidekiq_workers = 1
+## increase environment.good_job.concurrency instead!
+#good_job_workers = 1
 
 ## Displays the location of a post in a map.
 ## If you enable this setting you use the map tiles of https://www.mapbox.com
@@ -316,7 +316,7 @@
 
 ## Maximum number of parallel HTTP requests made to other pods (default=20)
 ## Be careful, raising this setting will heavily increase the memory usage
-## of your Sidekiq workers.
+## of your GoodJob workers.
 #typhoeus_concurrency = 20
 
 ## Maximum number of parallel user data import/export jobs (default=1)

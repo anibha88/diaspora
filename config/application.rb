@@ -36,6 +36,9 @@ module Diaspora
     # Allow to decode Time from serialized columns
     config.active_record.yaml_column_permitted_classes = [Time]
 
+    # Background jobs run through ActiveJob backed by GoodJob (DB-backed queue).
+    config.active_job.queue_adapter = :good_job
+
     # Enable escaping HTML in JSON.
     config.active_support.escape_html_entities_in_json = true
 

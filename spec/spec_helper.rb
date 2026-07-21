@@ -10,7 +10,7 @@ require File.join(File.dirname(__FILE__), "..", "config", "environment")
 require Rails.root.join("spec", "helper_methods")
 require "rspec/rails"
 require "webmock/rspec"
-require "sidekiq/testing"
+require "active_job/test_helper"
 require "shoulda/matchers"
 require "diaspora_federation/schemas"
 

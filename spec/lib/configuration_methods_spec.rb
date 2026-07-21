@@ -183,21 +183,21 @@ describe Configuration::Methods do
     end
   end
 
-  describe "sidekiq_log" do
+  describe "good_job_log" do
     context "with a relative log set" do
       it "joins that with Rails.root" do
         path = "/some/path/"
         allow(Rails).to receive(:root).and_return(double(join: path))
-        @settings.environment.sidekiq.log = "relative_path"
-        expect(@settings.sidekiq_log).to match path
+        @settings.environment.good_job.log = "relative_path"
+        expect(@settings.good_job_log).to match path
       end
     end
 
     context "with a absolute path" do
       it "just returns that" do
         path = "/foobar.log"
-        @settings.environment.sidekiq.log = path
-        expect(@settings.sidekiq_log).to eq(path)
+        @settings.environment.good_job.log = path
+        expect(@settings.good_job_log).to eq(path)
       end
     end
   end

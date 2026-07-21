@@ -45,13 +45,9 @@ gem "rqrcode", "3.2.0"
 
 gem "simple_captcha2", "0.5.0", require: "simple_captcha"
 
-# Background processing
+# Background processing (DB-backed via ActiveJob)
 
-gem "sidekiq", "7.3.10"
-
-# Scheduled processing
-
-gem "sidekiq-cron", "2.3.1"
+gem "good_job", "4.19.2"
 
 # Compression
 
