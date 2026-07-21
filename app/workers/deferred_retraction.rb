@@ -6,7 +6,7 @@
 
 module Workers
   class DeferredRetraction < Base
-    sidekiq_options queue: :high
+    diaspora_queue :high
 
     def perform(user_id, retraction_class, retraction_data, recipient_ids)
       user = User.find(user_id)

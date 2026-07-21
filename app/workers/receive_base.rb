@@ -2,7 +2,7 @@
 
 module Workers
   class ReceiveBase < Base
-    sidekiq_options queue: :urgent
+    diaspora_queue :urgent
 
     include Diaspora::Logging
 

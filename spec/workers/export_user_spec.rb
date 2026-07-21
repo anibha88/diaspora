@@ -28,12 +28,8 @@ describe Workers::ExportUser do
       AppConfig.settings.archive_jobs_concurrency = 1
     end
 
-    let(:pid) { "#{Socket.gethostname}:#{Process.pid}:#{SecureRandom.hex(6)}" }
-
     it "schedules a job for later when already another parallel export job is running" do
-      expect(Sidekiq::Workers).to receive(:new).and_return(
-        [[pid, SecureRandom.hex(4), {"payload" => {"class" => "Workers::ExportUser"}}]]
-      )
+      allow_any_instance_of(Workers::ExportUser).to receive(:currently_running_archive_jobs).and_return(1)
 
       expect(Workers::ExportUser).to receive(:perform_in).with(kind_of(Integer), alice.id)
       expect(alice).not_to receive(:perform_export!)
@@ -41,30 +37,8 @@ describe Workers::ExportUser do
       Workers::ExportUser.new.perform(alice.id)
     end
 
-    it "runs the export when the own running job" do
-      expect(Sidekiq::Workers).to receive(:new).and_return(
-        [[pid, Thread.current.object_id.to_s(36), {"payload" => {"class" => "Workers::ExportUser"}}]]
-      )
-
-      expect(Workers::ExportUser).not_to receive(:perform_in).with(kind_of(Integer), alice.id)
-      expect(alice).to receive(:perform_export!)
-
-      Workers::ExportUser.new.perform(alice.id)
-    end
-
-    it "runs the export when no other job is running" do
-      expect(Sidekiq::Workers).to receive(:new).and_return([])
-
-      expect(Workers::ExportUser).not_to receive(:perform_in).with(kind_of(Integer), alice.id)
-      expect(alice).to receive(:perform_export!)
-
-      Workers::ExportUser.new.perform(alice.id)
-    end
-
-    it "runs the export when some other job is running" do
-      expect(Sidekiq::Workers).to receive(:new).and_return(
-        [[pid, SecureRandom.hex(4), {"payload" => {"class" => "Workers::OtherJob"}}]]
-      )
+    it "runs the export when the number of running jobs is below the limit" do
+      allow_any_instance_of(Workers::ExportUser).to receive(:currently_running_archive_jobs).and_return(0)
 
       expect(Workers::ExportUser).not_to receive(:perform_in).with(kind_of(Integer), alice.id)
       expect(alice).to receive(:perform_export!)

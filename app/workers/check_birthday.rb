@@ -2,7 +2,7 @@
 
 module Workers
   class CheckBirthday < Base
-    sidekiq_options queue: :low
+    diaspora_queue :low
 
     def perform
       profiles = Profile

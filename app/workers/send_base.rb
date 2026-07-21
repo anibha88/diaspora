@@ -2,9 +2,21 @@
 
 module Workers
   class SendBase < Base
-    sidekiq_options queue: :medium, retry: 0
+    # send job to the dead job queue
+    class MaxRetriesReached < RuntimeError
+    end
 
-    MAX_RETRIES = AppConfig.environment.sidekiq.retry.get.to_i
+    diaspora_queue :medium
+
+    # SendBase manages its own retries (via schedule_retry + perform_in), so the
+    # framework must NOT auto-retry (this mirrors the former `retry: 0`).
+    # `attempts: 1` means "run once, never retry". Once the sender gives up it
+    # raises MaxRetriesReached, which we discard rather than retry (the former
+    # "send to the dead job queue" behavior).
+    retry_on StandardError, attempts: 1
+    discard_on MaxRetriesReached
+
+    MAX_RETRIES = (rt = AppConfig.environment.workers.retry.get) ? rt.to_i : 10
 
     protected
 
@@ -22,10 +34,6 @@ module Workers
     # based on Sidekiq::Middleware::Server::RetryJobs#seconds_to_delay
     def seconds_to_delay(count)
       ((count + 3)**4) + (rand(30) * (count + 1))
-    end
-
-    # send job to the dead job queue
-    class MaxRetriesReached < RuntimeError
     end
   end
 end

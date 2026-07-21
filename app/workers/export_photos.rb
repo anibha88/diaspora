@@ -6,7 +6,7 @@
 
 module Workers
   class ExportPhotos < Base
-    sidekiq_options queue: :low
+    diaspora_queue :low
 
     def perform(user_id)
       @user = User.find(user_id)

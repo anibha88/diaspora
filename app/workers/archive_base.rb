@@ -6,7 +6,7 @@
 
 module Workers
   class ArchiveBase < Base
-    sidekiq_options queue: :low
+    diaspora_queue :low
 
     include Diaspora::Logging
 
@@ -26,17 +26,22 @@ module Workers
       raise NotImplementedError, "You must override perform_archive_job"
     end
 
+    # Count archive jobs (any ArchiveBase subclass) that GoodJob is currently
+    # executing, excluding this job itself. Replaces the former Sidekiq::Workers
+    # thread introspection with a query against GoodJob's job table.
     def currently_running_archive_jobs
-      Sidekiq::Workers.new.count do |process_id, thread_id, work|
-        !(Process.pid.to_s == process_id.split(":")[1] && Thread.current.object_id.to_s(36) == thread_id) &&
-          ArchiveBase.subclasses.map(&:to_s).include?(work["payload"]["class"])
-      end
-    rescue RedisClient::CannotConnectError
-      # If code gets to this point and there is no Redis conenction, we're
-      # running in a Test environment and have not mocked Sidekiq::Workers, so
-      # we're not testing the concurrency-limiting behavior.
-      # There is no way a production pod will run into this code, as diaspora*
-      # refuses to start without redis.
+      archive_job_classes = ArchiveBase.subclasses.map(&:to_s)
+
+      GoodJob::Job
+        .where.not(performed_at: nil)
+        .where(finished_at: nil)
+        .where(job_class: archive_job_classes)
+        .where.not(active_job_id: job_id)
+        .count
+    rescue ActiveRecord::StatementInvalid, ActiveRecord::ConnectionNotEstablished
+      # If code gets to this point and the GoodJob tables can't be queried, we're
+      # running in a test environment and have not mocked the running-jobs count,
+      # so we're not testing the concurrency-limiting behavior.
       0
     end
   end

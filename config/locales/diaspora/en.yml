@@ -99,7 +99,7 @@ en:
       weekly_user_stats: "Weekly user stats"
       pod_stats: "Pod stats"
       report: "Reports"
-      sidekiq_monitor: "Sidekiq monitor"
+      sidekiq_monitor: "GoodJob monitor"
       pod_network: "Pod network"
     dashboard:
       pod_status: "Pod status"

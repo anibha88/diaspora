@@ -2,7 +2,7 @@
 
 module Workers
   class ReceiveLocal < Base
-    sidekiq_options queue: :high
+    diaspora_queue :high
 
     def perform(object_class_string, object_id, recipient_user_ids)
       object = object_class_string.constantize.find(object_id)

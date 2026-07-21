@@ -4,9 +4,6 @@
 #   licensed under the Affero General Public License version 3 or later.  See
 #   the COPYRIGHT file.
 
-require "sidekiq/web"
-require "sidekiq/cron/web"
-
 Rails.application.routes.draw do
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 
@@ -14,7 +11,7 @@ Rails.application.routes.draw do
 
   constraints ->(req) { req.env["warden"].authenticate?(scope: :user) &&
                         req.env['warden'].user.admin? } do
-    mount Sidekiq::Web => '/sidekiq', :as => 'sidekiq'
+    mount GoodJob::Engine => '/sidekiq', :as => 'sidekiq'
   end
 
   # Federation

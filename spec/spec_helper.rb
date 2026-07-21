@@ -10,7 +10,6 @@ require File.join(File.dirname(__FILE__), "..", "config", "environment")
 require Rails.root.join("spec", "helper_methods")
 require "rspec/rails"
 require "webmock/rspec"
-require "sidekiq/testing"
 require "shoulda/matchers"
 require "diaspora_federation/schemas"
 
@@ -93,6 +92,10 @@ RSpec.configure do |config|
 
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.include Devise::Test::IntegrationHelpers, type: :request
+  # ActiveJob's :test adapter records enqueued jobs without running them (like
+  # the former Sidekiq fake mode); ActiveJob::TestHelper (perform_enqueued_jobs)
+  # drains them when a spec needs the job to actually run (see inlined_jobs).
+  config.include ActiveJob::TestHelper
   config.mock_with :rspec
 
   config.example_status_persistence_file_path = "tmp/rspec-persistance.txt"

@@ -229,11 +229,6 @@ dia_is_db_running() {
   dia_docker_compose ps --services --filter status=running | grep -qx $DIASPORA_DOCKER_DB
 }
 
-dia_is_redis_running() {
-  # Check if redis container is running
-  dia_docker_compose ps --services --filter status=running | grep -qx redis
-}
-
 dia_get_db() {
   # Get currently configured or assumed db type
   grep -q '^  <<: \*mysql' "$DIASPORA_CONFIG_DB" 2>/dev/null && echo mysql || echo postgresql
@@ -247,11 +242,6 @@ dia_test_db_url() {
   else
     printf 'postgresql://postgres:postgres@postgresql:5432/%s' "$db_name"
   fi
-}
-
-dia_test_redis_url() {
-  local redis_db="$1"
-  printf 'redis://redis:6379/%s' "$redis_db"
 }
 
 dia_use_color_output() {
@@ -451,9 +441,8 @@ dia_run_rspec_command() {
 
 dia_run_cucumber_suite_command() {
   local db_name="$1"
-  local redis_db="$2"
-  local screenshot_path="$3"
-  shift 3
+  local screenshot_path="$2"
+  shift 2
 
   local detach=""
   if [ "$1" == "-d" ]; then detach="-d"; shift; fi
@@ -461,7 +450,6 @@ dia_run_cucumber_suite_command() {
   mkdir -p "$DIASPORA_ROOT/$screenshot_path"
 
   local db_url="$(dia_test_db_url "$db_name")"
-  local redis_url="$(dia_test_redis_url "$redis_db")"
   local color_args=()
   if [ -z "${NO_COLOR+x}" ]; then color_args=(--color); fi
 
@@ -471,7 +459,6 @@ dia_run_cucumber_suite_command() {
     -e RAILS_ENV=test \
     -e SCREENSHOT_PATH="/diaspora/$screenshot_path" \
     -e DATABASE_URL="$db_url" \
-    -e REDIS_URL="$redis_url" \
     -e DATABASE_CLEANER_ALLOW_REMOTE_DATABASE_URL=true \
     diaspora \
     bin/cucumber "${color_args[@]}" "$@"
@@ -480,7 +467,6 @@ dia_run_cucumber_suite_command() {
 dia_run_cucumber_command() {
   dia_run_cucumber_suite_command \
     "$DIASPORA_TEST_DB_CUCUMBER" \
-    "$DIASPORA_TEST_REDIS_CUCUMBER" \
     "tmp/screenshots/cucumber" \
     "$@"
 }
@@ -587,7 +573,7 @@ dia_build() {
 }
 
 dia_pull() {
-  dia_docker_compose pull redis $(dia_get_db)
+  dia_docker_compose pull $(dia_get_db)
 }
 
 dia_bundle() {
@@ -690,14 +676,12 @@ dia_exec() {
     # Use a running container
     dia_docker_compose exec $detach diaspora /exec-entrypoint.sh "$@"
   else
-    # stop db/redis if it was not running before
+    # stop db if it was not running before
     if ! dia_is_db_running; then stopdb="dia_docker_compose stop $DIASPORA_DOCKER_DB"; fi
-    if ! dia_is_redis_running; then stopredis="dia_docker_compose stop redis"; fi
     # Start a new container
     echo "No running instance found, starting new one for command execution ..."
     dia_docker_compose run --rm $detach --service-ports diaspora "$@"
     $stopdb
-    $stopredis
   fi
 }
 
@@ -791,7 +775,6 @@ dia_all_tests() {
   local cucumber_mobile_log="$logs_dir/cucumber-mobile.log"
   local jasmine_log="$logs_dir/jasmine.log"
   local stopdb=""
-  local stopredis=""
   local rspec_status=1
   local cucumber_desktop_status=1
   local cucumber_mobile_status=1
@@ -827,7 +810,6 @@ dia_all_tests() {
   ' INT TERM
 
   if ! dia_is_db_running; then stopdb="dia_docker_compose stop $DIASPORA_DOCKER_DB"; fi
-  if ! dia_is_redis_running; then stopredis="dia_docker_compose stop redis"; fi
 
   mkdir -p "$logs_dir"
   : > "$status_file"
@@ -837,9 +819,9 @@ dia_all_tests() {
   dia_start_test "$silent" "rspec" "34" "$rspec_log" rspec_pid rspec_state \
     dia_run_rspec_command --format "$rspec_formatter"
   dia_start_test "$silent" "cucumber-desktop" "32" "$cucumber_desktop_log" cucumber_desktop_pid cucumber_desktop_state \
-    dia_run_cucumber_suite_command "$DIASPORA_TEST_DB_CUCUMBER_DESKTOP" "$DIASPORA_TEST_REDIS_CUCUMBER_DESKTOP" "tmp/screenshots/cucumber-desktop" features/desktop
+    dia_run_cucumber_suite_command "$DIASPORA_TEST_DB_CUCUMBER_DESKTOP" "tmp/screenshots/cucumber-desktop" features/desktop
   dia_start_test "$silent" "cucumber-mobile" "36" "$cucumber_mobile_log" cucumber_mobile_pid cucumber_mobile_state \
-    dia_run_cucumber_suite_command "$DIASPORA_TEST_DB_CUCUMBER_MOBILE" "$DIASPORA_TEST_REDIS_CUCUMBER_MOBILE" "tmp/screenshots/cucumber-mobile" features/mobile
+    dia_run_cucumber_suite_command "$DIASPORA_TEST_DB_CUCUMBER_MOBILE" "tmp/screenshots/cucumber-mobile" features/mobile
 
   local seg_rspec seg_cuke_desktop seg_cuke_mobile seg_jasmine spinner
   while :; do
@@ -884,14 +866,12 @@ dia_all_tests() {
   if [ "$interrupted" -eq 1 ]; then
     trap - INT TERM
     [ -n "$stopdb" ] && $stopdb
-    [ -n "$stopredis" ] && $stopredis
     return 130
   fi
 
   trap - INT TERM
 
   [ -n "$stopdb" ] && $stopdb
-  [ -n "$stopredis" ] && $stopredis
 
   if [ "$rspec_status" -ne 0 ] || [ "$cucumber_desktop_status" -ne 0 ] || [ "$cucumber_mobile_status" -ne 0 ]; then
     overall_status=1
@@ -952,20 +932,17 @@ dia_setup() {
 dia_setup_rails() {
   # Prepare rails, install dependencies, migrate database, ...
   echo "Setting up environment for tests ..."
-  # stop db/redis if it was not running before
+  # stop db if it was not running before
   if ! dia_is_db_running; then stopdb="dia_docker_compose stop $DIASPORA_DOCKER_DB"; fi
-  if ! dia_is_redis_running; then stopredis="dia_docker_compose stop redis"; fi
   dia_docker_compose run --rm diaspora bin/setup
   $stopdb
-  $stopredis
 }
 
 dia_setup_tests() {
   # Prepare all possible tests
   echo "Setting up environment for tests ..."
-  # stop db/redis if it was not running before
+  # stop db if it was not running before
   if ! dia_is_db_running; then stopdb="dia_docker_compose stop $DIASPORA_DOCKER_DB"; fi
-  if ! dia_is_redis_running; then stopredis="dia_docker_compose stop redis"; fi
 
   echo "Preparing rspec/jasmine DB ($DIASPORA_TEST_DB_RSPEC) ..."
   dia_rake_in_test_db "$DIASPORA_TEST_DB_RSPEC" db:create db:migrate tests:generate_fixtures assets:generate_error_pages
@@ -977,7 +954,6 @@ dia_setup_tests() {
   dia_prepare_cucumber_test_db "$DIASPORA_TEST_DB_CUCUMBER_MOBILE"
 
   $stopdb
-  $stopredis
 }
 
 dia_start() {
@@ -1018,11 +994,8 @@ export DIASPORA_CONFIG_DB=$DIASPORA_ROOT/config/database.yml
 export DIASPORA_DOCKER_DB=$(dia_get_db)
 export DIASPORA_TEST_DB_RSPEC=diaspora_test
 export DIASPORA_TEST_DB_CUCUMBER=diaspora_integration1
-export DIASPORA_TEST_REDIS_CUCUMBER=1
 export DIASPORA_TEST_DB_CUCUMBER_DESKTOP=$DIASPORA_TEST_DB_CUCUMBER
-export DIASPORA_TEST_REDIS_CUCUMBER_DESKTOP=$DIASPORA_TEST_REDIS_CUCUMBER
 export DIASPORA_TEST_DB_CUCUMBER_MOBILE=diaspora_integration2
-export DIASPORA_TEST_REDIS_CUCUMBER_MOBILE=2
 export DIASPORA_TEST_RUN_LABEL=org.diaspora.test-run=1
 
 export COMPOSE_FILE=$DIASPORA_ROOT/docker/develop/docker-compose.yml

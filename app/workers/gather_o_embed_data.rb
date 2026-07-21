@@ -7,7 +7,7 @@
 
 module Workers
   class GatherOEmbedData < Base
-    sidekiq_options queue: :medium
+    diaspora_queue :medium
 
     def perform(post_id, url, retry_count=1)
       post = Post.find(post_id)

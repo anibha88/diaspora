@@ -9,15 +9,14 @@ defaults:
   environment:
     url: "http://localhost:3000/"
     certificate_authorities:
-    redis:
     require_ssl: true
-    sidekiq:
+    workers:
       concurrency: 5
       retry: 10
       backtrace: 15
       dead_jobs_limit: 5000
       dead_jobs_timeout: 3628800 # 6 weeks
-      log: 'log/sidekiq.log'
+      log: 'log/good_job.log'
     s3:
       enable: false
       key:
@@ -44,7 +43,7 @@ defaults:
     stderr_log:
     stdout_log:
     web_timeout: 90
-    sidekiq_workers: 1
+    good_job_workers: 1
   map:
     mapbox:
       enabled: false

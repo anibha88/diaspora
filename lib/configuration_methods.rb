@@ -91,19 +91,8 @@ module Configuration
       (git_revision || version)[0..8]
     end
 
-    def get_redis_options
-      redis_url = ENV["REDIS_URL"] || environment.redis.get
-
-      return {} unless redis_url.present?
-
-      unless redis_url.start_with?("redis://", "unix:///")
-        warn "WARNING: Your redis url (#{redis_url}) doesn't start with redis:// or unix:///"
-      end
-      {url: redis_url}
-    end
-
-    def sidekiq_log
-      path = Pathname.new environment.sidekiq.log.get
+    def good_job_log
+      path = Pathname.new environment.workers.log.get
       path = Rails.root.join(path) unless path.absolute?
       path.to_s
     end
