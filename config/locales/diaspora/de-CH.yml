@@ -74,7 +74,7 @@ de-CH:
       weekly_user_stats: Wöchentlichi Benutzerstatistik
       pod_stats: Pod Statistik
       report: Meldige
-      sidekiq_monitor: Sidekiq-Monitor
+      background_monitor: Sidekiq-Monitor
     user_search:
       you_currently:
         one: Du hesch momentan ei Iiladig vorig %{link}

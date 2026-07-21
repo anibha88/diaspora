@@ -58,6 +58,6 @@ class Report < ApplicationRecord
   end
 
   def send_report_notification
-    Workers::Mail::ReportWorker.perform_async(id)
+    Workers::Mail::ReportWorker.perform_later(id)
   end
 end

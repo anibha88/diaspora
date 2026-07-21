@@ -2,9 +2,7 @@
 
 module Workers
   class ReceiveBase < Base
-    sidekiq_options queue: :urgent
-
-    include Diaspora::Logging
+    queue_as :urgent
 
     # don't retry for errors that will fail again
     def filter_errors_for_retry

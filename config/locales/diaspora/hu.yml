@@ -74,7 +74,7 @@ hu:
       weekly_user_stats: Heti felhasználóstatisztika
       pod_stats: Pod statisztika
       report: Jelentések
-      sidekiq_monitor: Sidekiq monitor
+      background_monitor: Sidekiq monitor
       pod_network: Pod hálózat
     dashboard:
       pod_status: Pod állapot

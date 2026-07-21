@@ -66,7 +66,7 @@ Cucumber::Rails::World.use_transactional_tests = false
 require File.join(File.dirname(__FILE__), "integration_sessions_controller")
 require File.join(File.dirname(__FILE__), "poor_mans_webmock")
 
-require 'sidekiq/testing/inline'
+require "active_job/test_helper"
 
 require Rails.root.join('spec', 'helper_methods')
 require Rails.root.join('spec', 'support', 'inlined_jobs')

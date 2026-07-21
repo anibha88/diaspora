@@ -22,12 +22,11 @@ describe 'a user receives a post', :type => :request do
   end
 
   it "should show bob's post to alice" do
-    inlined_jobs do |queue|
+    inlined_jobs do
       sm = bob.build_post(:status_message, :text => "hi")
       sm.save!
       bob.aspects.reload
       bob.add_to_streams(sm, [@bobs_aspect])
-      queue.drain_all
       bob.dispatch_post(sm)
     end
 

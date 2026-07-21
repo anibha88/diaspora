@@ -47,11 +47,7 @@ gem "simple_captcha2", "0.5.0", require: "simple_captcha"
 
 # Background processing
 
-gem "sidekiq", "7.3.10"
-
-# Scheduled processing
-
-gem "sidekiq-cron", "2.3.1"
+gem "good_job", "4.9.2"
 
 # Compression
 

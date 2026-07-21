@@ -93,7 +93,7 @@ sv:
       weekly_user_stats: Veckovis användarstatistik
       pod_stats: Podstatistik
       report: Anmälningar
-      sidekiq_monitor: Sidekiq-övervakare
+      background_monitor: Sidekiq-övervakare
       pod_network: Podnätverk
     dashboard:
       pod_status: Podstatus

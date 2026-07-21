@@ -92,7 +92,7 @@ oc:
       weekly_user_stats: Estatisticas d'utilizaire setmanièras
       pod_stats: Estats del Pod
       report: Senhalaments
-      sidekiq_monitor: Monitor Sidekiq
+      background_monitor: Monitor Sidekiq
       pod_network: Ret del pod
     dashboard:
       pod_status: Estat del pod

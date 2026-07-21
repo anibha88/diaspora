@@ -21,6 +21,8 @@ module Diaspora
     # Use classic autoloader for now
     config.autoloader = :classic
 
+    config.active_job.queue_adapter = :good_job
+
     # Configuration for the application, engines, and railties goes here.
     #
     # These settings can be overridden in specific environments using the files

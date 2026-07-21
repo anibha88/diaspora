@@ -62,7 +62,7 @@ bs:
       user_search: Pretraga Korisnika
       weekly_user_stats: Sedmična Statistika Korisnika
       pod_stats: Pod Statistike
-      sidekiq_monitor: Sidekiq monitor
+      background_monitor: Sidekiq monitor
     user_search:
       you_currently:
         other: trenutno imate %{user_invitation} pozivnice preostale %{link}

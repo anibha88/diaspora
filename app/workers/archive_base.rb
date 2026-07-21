@@ -6,15 +6,13 @@
 
 module Workers
   class ArchiveBase < Base
-    sidekiq_options queue: :low
-
-    include Diaspora::Logging
+    queue_as :low
 
     def perform(*args)
       if currently_running_archive_jobs >= AppConfig.settings.archive_jobs_concurrency.to_i
         logger.info "Already the maximum number of parallel archive jobs running, " \
                     "scheduling #{self.class}:#{args} in 5 minutes."
-        self.class.perform_in(5.minutes + rand(30), *args)
+        self.class.set(wait: 5.minutes + rand(30)).perform_later(*args)
       else
         perform_archive_job(*args)
       end
@@ -27,16 +25,14 @@ module Workers
     end
 
     def currently_running_archive_jobs
-      Sidekiq::Workers.new.count do |process_id, thread_id, work|
-        !(Process.pid.to_s == process_id.split(":")[1] && Thread.current.object_id.to_s(36) == thread_id) &&
-          ArchiveBase.subclasses.map(&:to_s).include?(work["payload"]["class"])
-      end
-    rescue RedisClient::CannotConnectError
-      # If code gets to this point and there is no Redis conenction, we're
-      # running in a Test environment and have not mocked Sidekiq::Workers, so
-      # we're not testing the concurrency-limiting behavior.
-      # There is no way a production pod will run into this code, as diaspora*
-      # refuses to start without redis.
+      GoodJob::Job.where(job_class: ArchiveBase.subclasses.map(&:to_s))
+                  .running
+                  .count
+    rescue StandardError
+      # If code gets to this point and there is no database connection or
+      # GoodJob is not available, we're running in a test environment and
+      # have not mocked the query, so we're not testing the
+      # concurrency-limiting behavior.
       0
     end
   end

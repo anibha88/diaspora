@@ -78,11 +78,11 @@ class StatusMessage < Post
   end
 
   def queue_gather_oembed_data
-    Workers::GatherOEmbedData.perform_async(self.id, self.oembed_url)
+    Workers::GatherOEmbedData.perform_later(self.id, self.oembed_url)
   end
 
   def queue_gather_open_graph_data
-    Workers::GatherOpenGraphData.perform_async(self.id, self.open_graph_url)
+    Workers::GatherOpenGraphData.perform_later(self.id, self.open_graph_url)
   end
 
   def contains_oembed_url_in_text?

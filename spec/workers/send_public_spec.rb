@@ -10,7 +10,7 @@ describe Workers::SendPublic do
     expect(DiasporaFederation::Federation::Sender).to receive(:public).with(
       sender_id, obj_str, urls, xml
     ).and_return([])
-    expect(Workers::SendPublic).not_to receive(:perform_in)
+    expect(Workers::SendPublic).not_to receive(:set)
 
     Workers::SendPublic.new.perform(sender_id, obj_str, urls, xml)
   end
@@ -20,9 +20,8 @@ describe Workers::SendPublic do
     expect(DiasporaFederation::Federation::Sender).to receive(:public).with(
       sender_id, obj_str, urls, xml
     ).and_return(failing_urls)
-    expect(Workers::SendPublic).to receive(:perform_in).with(
-      kind_of(Integer), sender_id, obj_str, failing_urls, xml, 1
-    )
+    expect(Workers::SendPublic).to receive(:set).with(wait: kind_of(Numeric)).and_return(Workers::SendPublic)
+    expect(Workers::SendPublic).to receive(:perform_later).with(sender_id, obj_str, failing_urls, xml, 1)
 
     Workers::SendPublic.new.perform(sender_id, obj_str, urls, xml)
   end
@@ -32,7 +31,7 @@ describe Workers::SendPublic do
     expect(DiasporaFederation::Federation::Sender).to receive(:public).with(
       sender_id, obj_str, urls, xml
     ).and_return(failing_urls)
-    expect(Workers::SendPublic).not_to receive(:perform_in)
+    expect(Workers::SendPublic).not_to receive(:set)
 
     expect {
       Workers::SendPublic.new.perform(sender_id, obj_str, urls, xml, 9)

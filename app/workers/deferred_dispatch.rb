@@ -6,7 +6,7 @@
 
 module Workers
   class DeferredDispatch < Base
-    sidekiq_options queue: :high
+    queue_as :high
 
     def perform(user_id, object_class_name, object_id, opts)
       user = User.find(user_id)

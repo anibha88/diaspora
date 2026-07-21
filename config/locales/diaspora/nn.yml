@@ -77,7 +77,7 @@ nn:
       user_search: Brukarsøk
       weekly_user_stats: Brukarstatistikk per veke
       pod_stats: Pod-statistikk
-      sidekiq_monitor: Sidekiq monitor
+      background_monitor: Sidekiq monitor
     user_search:
       you_currently:
         other: du har %{user_invitation} igjen %{link}

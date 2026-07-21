@@ -91,7 +91,7 @@ hye-classical:
       weekly_user_stats: Օգտատէրերի շաբաթական վիճակագրութիւն
       pod_stats: Հանգոյցի վիճակագրութիւն
       report: Բողոքներ
-      sidekiq_monitor: Սայդկիքի հսկում
+      background_monitor: Սայդկիքի հսկում
       pod_network: Փոդի ցանց
     dashboard:
       pod_status: Փոդի կարգավիճակը

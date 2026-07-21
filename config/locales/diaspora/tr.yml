@@ -68,7 +68,7 @@ tr:
       weekly_user_stats: Haftalık Kullanıcı İstatistikleri
       pod_stats: Pod İstatistikleri
       report: Raporlar
-      sidekiq_monitor: Sidekiq göstergesi
+      background_monitor: Sidekiq göstergesi
     user_search:
       you_currently:
         zero: "%{link} için bir davetiniz kalmadı"

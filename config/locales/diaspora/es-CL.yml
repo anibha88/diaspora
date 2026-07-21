@@ -62,7 +62,7 @@ es-CL:
       user_search: Buscar usuario
       weekly_user_stats: Estadísticas semanales de usuarios
       pod_stats: Estadísticas del servidor
-      sidekiq_monitor: Monitor Sidekiq
+      background_monitor: Monitor Sidekiq
     user_search:
       you_currently:
         other: Actualmente tienes %{user_invitation} invitaciones %{link}

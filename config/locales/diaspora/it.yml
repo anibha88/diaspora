@@ -83,7 +83,7 @@ it:
       weekly_user_stats: Statistiche settimanali utenti
       pod_stats: Statistiche pod
       report: Report
-      sidekiq_monitor: Monitor Sidekiq
+      background_monitor: Monitor Sidekiq
     dashboard:
       pod_status: Status pod
     user_search:

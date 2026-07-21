@@ -89,7 +89,7 @@ uk:
       weekly_user_stats: Щотижнева статистика користувачів
       pod_stats: Статистика сервера
       report: Скарги
-      sidekiq_monitor: Монітор Sidekiq
+      background_monitor: Монітор Sidekiq
       pod_network: Мережа поду
     dashboard:
       pod_status: Статус поду

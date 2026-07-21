@@ -93,7 +93,7 @@ gl:
       weekly_user_stats: Estatísticas semanais do usuario
       pod_stats: Estatísticas do nodo
       report: Informes
-      sidekiq_monitor: Monitor Sidekiq
+      background_monitor: Monitor Sidekiq
       pod_network: Rede do nodo
     dashboard:
       pod_status: Estado do nodo

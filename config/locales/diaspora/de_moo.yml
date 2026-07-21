@@ -93,7 +93,7 @@ de_moo:
       weekly_user_stats: Wöchentliche Kuhstatistik
       pod_stats: Bauernhof Statistik
       report: Meldungen
-      sidekiq_monitor: Sidekiq-Monitor
+      background_monitor: Sidekiq-Monitor
       pod_network: Bauernhofnetzwerk
     dashboard:
       pod_status: Bauernhofstatus

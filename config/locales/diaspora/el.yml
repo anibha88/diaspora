@@ -62,7 +62,7 @@ el:
       user_search: Αναζήτηση χρηστών
       weekly_user_stats: Εβδομαδιαία στατιστικά χρηστών
       pod_stats: Στατιστικά του Pod
-      sidekiq_monitor: Sidekiq monitor
+      background_monitor: Sidekiq monitor
     user_search:
       you_currently:
         zero: Αυτή τη στιγμή δεν έχετε προσκλήσεις %{link}

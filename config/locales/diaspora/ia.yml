@@ -93,7 +93,7 @@ ia:
       weekly_user_stats: Statisticas septimanal de usatores
       pod_stats: Statisticas del pod
       report: Reportos
-      sidekiq_monitor: Monitor Sidekiq
+      background_monitor: Monitor Sidekiq
       pod_network: Rete de pods
     dashboard:
       pod_status: Stato del pod

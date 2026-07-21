@@ -62,7 +62,7 @@ ml:
       user_search: ഉപയോക്താക്കളെ തിരയുക
       weekly_user_stats: ആഴ്ചതോറുമുള്ള അവസ്ഥ
       pod_stats: പോഡിന്റെ അവസ്ഥ
-      sidekiq_monitor: സൈഡ്കിക്ക് നിരീക്ഷകൻ
+      background_monitor: സൈഡ്കിക്ക് നിരീക്ഷകൻ
     user_search:
       you_currently:
         other: താങ്കൾക്ക് നിലവിൽ %{user_invitation} ക്ഷണങ്ങൾ ഉണ്ട് %{link}

@@ -90,14 +90,14 @@ DiasporaFederation.configure do |config|
     end
 
     on :queue_public_receive do |xml|
-      Workers::ReceivePublic.perform_async(xml)
+      Workers::ReceivePublic.perform_later(xml)
     end
 
     on :queue_private_receive do |guid, xml|
       person = Person.find_by_guid(guid)
 
       (person.present? && person.owner_id.present?).tap do |user_found|
-        Workers::ReceivePrivate.perform_async(person.owner.id, xml) if user_found
+        Workers::ReceivePrivate.perform_later(person.owner.id, xml) if user_found
       end
     end
 
@@ -113,7 +113,7 @@ DiasporaFederation.configure do |config|
         Diaspora::Federation::Receive.retraction(entity, recipient_id)
       else
         persisted = Diaspora::Federation::Receive.perform(entity)
-        Workers::ReceiveLocal.perform_async(persisted.class.to_s, persisted.id, [recipient_id].compact) if persisted
+        Workers::ReceiveLocal.perform_later(persisted.class.to_s, persisted.id, [recipient_id].compact) if persisted
       end
     end
 

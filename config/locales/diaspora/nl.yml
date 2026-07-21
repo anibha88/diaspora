@@ -87,7 +87,7 @@ nl:
       weekly_user_stats: Wekelijkse Gebruikersstatistieken
       pod_stats: Pod Statistieken
       report: Meldingen
-      sidekiq_monitor: Sidekiq monitor
+      background_monitor: Sidekiq monitor
       pod_network: Pod netwerk
     dashboard:
       pod_status: Pod status

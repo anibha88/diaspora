@@ -69,7 +69,7 @@ describe Retraction do
       retraction = Retraction.for(post)
       federation_retraction = Diaspora::Federation::Entities.retraction(retraction)
 
-      expect(Workers::DeferredRetraction).to receive(:perform_async).with(
+      expect(Workers::DeferredRetraction).to receive(:perform_later).with(
         local_luke.id, "Retraction", federation_retraction.to_h.deep_stringify_keys, [remote_raphael.id]
       )
 
@@ -82,7 +82,7 @@ describe Retraction do
       retraction = Retraction.for(comment)
       federation_retraction = Diaspora::Federation::Entities.retraction(retraction)
 
-      expect(Workers::DeferredRetraction).to receive(:perform_async).with(
+      expect(Workers::DeferredRetraction).to receive(:perform_later).with(
         local_luke.id, "Retraction", federation_retraction.to_h.deep_stringify_keys, [remote_raphael.id]
       )
 
@@ -97,7 +97,7 @@ describe Retraction do
         retraction = Retraction.for(comment)
         federation_retraction = Diaspora::Federation::Entities.retraction(retraction)
 
-        expect(Workers::DeferredRetraction).to receive(:perform_async).with(
+        expect(Workers::DeferredRetraction).to receive(:perform_later).with(
           local_luke.id, "Retraction", federation_retraction.to_h.deep_stringify_keys, [remote_raphael.id]
         )
 
@@ -108,7 +108,7 @@ describe Retraction do
         retraction = Retraction.for(comment)
         federation_retraction = Diaspora::Federation::Entities.retraction(retraction)
 
-        expect(Workers::DeferredRetraction).to receive(:perform_async).with(
+        expect(Workers::DeferredRetraction).to receive(:perform_later).with(
           local_luke.id, "Retraction", federation_retraction.to_h.deep_stringify_keys, []
         )
 

@@ -93,7 +93,7 @@ da:
       weekly_user_stats: Ugentlig bruger-statistik
       pod_stats: Statistik for Pod
       report: Rapporter
-      sidekiq_monitor: Sidekiq monitor
+      background_monitor: Sidekiq monitor
       pod_network: Pod netværk
     dashboard:
       pod_status: Pod status

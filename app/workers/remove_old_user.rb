@@ -6,7 +6,7 @@
 
 module Workers
   class RemoveOldUser < Base
-    sidekiq_options queue: :low
+    queue_as :low
     
     def safe_remove_after
       # extra safety time to compare in addition to remove_after

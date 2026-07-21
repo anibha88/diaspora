@@ -6,7 +6,7 @@
 
 module Workers
   class FetchWebfinger < Base
-    sidekiq_options queue: :urgent
+    queue_as :urgent
 
     def perform(account)
       person = Person.find_or_fetch_by_identifier(account)

@@ -92,7 +92,7 @@ es:
       weekly_user_stats: Estadísticas semanales de usuario
       pod_stats: Estadísticas del servidor
       report: Informes
-      sidekiq_monitor: Monitor Sidekiq
+      background_monitor: Monitor Sidekiq
       pod_network: Red POD
     dashboard:
       pod_status: Estado del pod

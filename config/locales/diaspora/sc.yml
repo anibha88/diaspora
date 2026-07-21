@@ -92,7 +92,7 @@ sc:
       weekly_user_stats: Istatìsticas de sa chida pro s'impreadore
       pod_stats: Istatìsticas de su pod
       report: Sinnalatziones
-      sidekiq_monitor: Monitor Sidekiq
+      background_monitor: Monitor Sidekiq
       pod_network: Retza pod
     dashboard:
       pod_status: Istadu pod

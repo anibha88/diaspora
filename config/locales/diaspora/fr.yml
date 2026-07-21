@@ -92,7 +92,7 @@ fr:
       weekly_user_stats: Statistiques utilisateur hebdomadaires
       pod_stats: Statistiques du pod
       report: Signalements
-      sidekiq_monitor: Moniteur Sidekiq
+      background_monitor: Moniteur Sidekiq
       pod_network: Réseau du pod
     dashboard:
       pod_status: État du pod

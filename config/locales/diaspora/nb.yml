@@ -91,7 +91,7 @@ nb:
       weekly_user_stats: Ukentlig brukerstatistikk
       pod_stats: Belgstatistikk
       report: Rapporter
-      sidekiq_monitor: Sidekiq overvåke
+      background_monitor: Sidekiq overvåke
       pod_network: Belgens nettverk
     dashboard:
       pod_status: Belgens tilstand

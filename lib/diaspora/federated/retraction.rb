@@ -36,7 +36,7 @@ class Retraction
 
   def defer_dispatch(user, include_target_author=true)
     subscribers = dispatch_subscribers(include_target_author)
-    Workers::DeferredRetraction.perform_async(user.id, self.class.to_s, data.deep_stringify_keys,
+    Workers::DeferredRetraction.perform_later(user.id, self.class.to_s, data.deep_stringify_keys,
                                               subscribers.map(&:id))
   end
 

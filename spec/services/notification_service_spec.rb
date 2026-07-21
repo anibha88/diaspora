@@ -20,7 +20,7 @@ describe NotificationService do
 
       it "sends only mention notification" do
         [alice, eve].each do |user|
-          expect(Workers::Mail::MentionedInComment).to receive(:perform_async).with(
+          expect(Workers::Mail::MentionedInComment).to receive(:perform_later).with(
             user.id,
             bob.person.id,
             *comment.mentions.where(person: user.person).ids
@@ -54,15 +54,15 @@ describe NotificationService do
         end
 
         it "calls appropriate mail worker instead" do
-          expect(Workers::Mail::MentionedInComment).not_to receive(:perform_async)
+          expect(Workers::Mail::MentionedInComment).not_to receive(:perform_later)
 
-          expect(Workers::Mail::CommentOnPost).to receive(:perform_async).with(
+          expect(Workers::Mail::CommentOnPost).to receive(:perform_later).with(
             alice.id,
             bob.person.id,
             *comment.mentions.where(person: alice.person).ids
           )
 
-          expect(Workers::Mail::AlsoCommented).to receive(:perform_async).with(
+          expect(Workers::Mail::AlsoCommented).to receive(:perform_later).with(
             eve.id,
             bob.person.id,
             *comment.mentions.where(person: eve.person).ids

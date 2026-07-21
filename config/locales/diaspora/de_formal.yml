@@ -93,7 +93,7 @@ de_formal:
       weekly_user_stats: Wöchentliche Benutzerstatistik
       pod_stats: Pod-Statistiken
       report: Meldungen
-      sidekiq_monitor: Sidekiq-Monitor
+      background_monitor: Sidekiq-Monitor
       pod_network: Pod-Netzwerk
     dashboard:
       pod_status: Pod-Status

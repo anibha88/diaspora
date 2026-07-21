@@ -91,7 +91,7 @@ fi:
       weekly_user_stats: Viikottaiset käyttäjätilastot
       pod_stats: Podin tilastot
       report: Raportit
-      sidekiq_monitor: Sidekiq tarkkailija
+      background_monitor: Sidekiq tarkkailija
       pod_network: Podverkko
     dashboard:
       pod_status: Podin tila

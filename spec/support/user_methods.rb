@@ -48,8 +48,8 @@ class User
 
   def disable_send_workers
     RSpec.current_example&.example_group_instance&.instance_eval do
-      allow(Workers::SendPrivate).to receive(:perform_async)
-      allow(Workers::SendPublic).to receive(:perform_async)
+      allow(Workers::SendPrivate).to receive(:perform_later)
+      allow(Workers::SendPublic).to receive(:perform_later)
     end
   end
 end

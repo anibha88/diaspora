@@ -73,7 +73,7 @@ en_valspeak:
       weekly_user_stats: Weekly ppl stats
       pod_stats: Pod statsss <3
       report: Reportz
-      sidekiq_monitor: Technical thingy called Sidekiq monitor... wasnt that like... a phone once? OMG! IT WAS! :DD
+      background_monitor: Technical thingy called Sidekiq monitor... wasnt that like... a phone once? OMG! IT WAS! :DD
     user_search:
       you_currently:
         zero: u like... have no invites left %{link} :\

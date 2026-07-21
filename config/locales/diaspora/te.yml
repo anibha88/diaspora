@@ -66,7 +66,7 @@ te:
       weekly_user_stats: వారపు వాడుకరి గణాంకాలు
       pod_stats: పాడ్ గణాంకాలు
       report: నివేదికలు
-      sidekiq_monitor: సైడ్‌కిక్ మానిటర్
+      background_monitor: సైడ్‌కిక్ మానిటర్
     user_search:
       you_currently:
         zero: మీ వద్ద ఇంక ఆహ్వానాలు ఏమీ మిగిలిలేవు %{link}

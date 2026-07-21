@@ -70,7 +70,7 @@ he:
       user_search: חיפוש משתמש
       weekly_user_stats: סטטיסטיקת חברים שבועית
       pod_stats: סטטיסטיקה של הפוד
-      sidekiq_monitor: מעקב Sidekiq
+      background_monitor: מעקב Sidekiq
     user_search:
       you_currently:
         zero: לא נותרו לך הזמנות %{link}

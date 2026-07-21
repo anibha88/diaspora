@@ -64,7 +64,7 @@ zh-CN:
       weekly_user_stats: 用户统计周报
       pod_stats: Pod 统计资料
       report: 举报
-      sidekiq_monitor: 监控Sidekiq
+      background_monitor: 监控Sidekiq
     user_search:
       you_currently:
         other: 您目前还可以邀请 %{user_invitation} 次 %{link}

@@ -169,11 +169,11 @@ class User < ApplicationRecord
   end
 
   # Copy the method provided by Devise to be able to call it later
-  # from a Sidekiq job
+  # from a background job
   alias_method :send_reset_password_instructions!, :send_reset_password_instructions
 
   def send_reset_password_instructions
-    Workers::ResetPassword.perform_async(self.id)
+    Workers::ResetPassword.perform_later(self.id)
   end
 
   def update_user_preferences(pref_hash)
@@ -311,7 +311,7 @@ class User < ApplicationRecord
 
   def queue_export
     update exporting: true, export: nil, exported_at: nil
-    Workers::ExportUser.perform_async(id)
+    Workers::ExportUser.perform_later(id)
   end
 
   def perform_export!
@@ -337,7 +337,7 @@ class User < ApplicationRecord
 
   def queue_export_photos
     update exporting_photos: true, exported_photos_file: nil, exported_photos_at: nil
-    Workers::ExportPhotos.perform_async(id)
+    Workers::ExportPhotos.perform_later(id)
   end
 
   def perform_export_photos!
@@ -353,13 +353,13 @@ class User < ApplicationRecord
     return unless job.present?
     pref = job.to_s.gsub('Workers::Mail::', '').underscore
     if(self.disable_mail == false && !self.user_preferences.exists?(:email_type => pref))
-      job.perform_async(*args)
+      job.perform_later(*args)
     end
   end
 
   def send_confirm_email
     return if unconfirmed_email.blank?
-    Workers::Mail::ConfirmEmail.perform_async(id)
+    Workers::Mail::ConfirmEmail.perform_later(id)
   end
 
   ######### Posts and Such ###############

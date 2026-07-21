@@ -5,10 +5,12 @@
 #   the COPYRIGHT file.
 
 module Workers
-  class Base
-    include Sidekiq::Worker
-    sidekiq_options backtrace: (bt = AppConfig.environment.sidekiq.backtrace.get) && bt.to_i,
-                    retry:     (rt = AppConfig.environment.sidekiq.retry.get) && rt.to_i
+  class Base < ActiveJob::Base
+    queue_as :default
+
+    retry_on StandardError,
+             wait:     :exponentially_longer,
+             attempts: ((rt = AppConfig.environment.sidekiq.retry.get) ? rt.to_i + 1 : 11)
 
     include Diaspora::Logging
   end

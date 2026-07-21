@@ -17,7 +17,7 @@ describe Devise::PasswordsController, type: :controller do
       end
 
       it "doesn't send email" do
-        expect(Workers::ResetPassword).not_to receive(:perform_async)
+        expect(Workers::ResetPassword).not_to receive(:perform_later)
         post :create, params: {user: {email: "foo@example.com"}}
       end
     end
@@ -26,8 +26,8 @@ describe Devise::PasswordsController, type: :controller do
         post :create, params: {user: {email: alice.email}}
         expect(response).to redirect_to(new_user_session_path)
       end
-      it "sends email (enqueued to Sidekiq)" do
-        expect(Workers::ResetPassword).to receive(:perform_async).with(alice.id)
+      it "sends email (enqueued to background job)" do
+        expect(Workers::ResetPassword).to receive(:perform_later).with(alice.id)
         post :create, params: {user: {email: alice.email}}
       end
     end

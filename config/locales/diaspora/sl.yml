@@ -62,7 +62,7 @@ sl:
       user_search: Iskanje uporabnikov
       weekly_user_stats: Tedenska statistika uporabnikov
       pod_stats: Statistika Poda
-      sidekiq_monitor: Sidekiq zaslon
+      background_monitor: Sidekiq zaslon
     user_search:
       you_currently:
         other: trenutno imate na razpolago še %{user_invitation} povabil %{link}

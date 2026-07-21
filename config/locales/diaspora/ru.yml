@@ -92,7 +92,7 @@ ru:
       weekly_user_stats: Еженедельная пользовательская статистика
       pod_stats: Статистика пода
       report: Жалобы
-      sidekiq_monitor: Монитор Sidekiq
+      background_monitor: Монитор Sidekiq
       pod_network: Сеть подов
     dashboard:
       pod_status: Статус пода

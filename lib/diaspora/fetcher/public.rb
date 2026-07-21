@@ -17,7 +17,7 @@ module Diaspora; module Fetcher; class Public
   Status_Unfetchable = 6
 
   def self.queue_for(person)
-    Workers::FetchPublicPosts.perform_async(person.diaspora_handle) unless person.fetch_status > Status_Initial
+    Workers::FetchPublicPosts.perform_later(person.diaspora_handle) unless person.fetch_status > Status_Initial
   end
 
   # perform all actions necessary to fetch the public posts of a person

@@ -91,7 +91,7 @@ pl:
       weekly_user_stats: Tygodniowe statystyki użytkowników
       pod_stats: Statystyki Poda
       report: Zgłoszenia
-      sidekiq_monitor: Monitor Sidekiq
+      background_monitor: Monitor Sidekiq
       pod_network: Sieć poda
     dashboard:
       pod_status: Stan poda

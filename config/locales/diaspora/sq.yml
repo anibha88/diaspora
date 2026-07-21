@@ -93,7 +93,7 @@ sq:
       weekly_user_stats: Statistika javore përdoruesish
       pod_stats: Statistika nyjeje
       report: Raportime
-      sidekiq_monitor: Mbikëqyrës Sidekiq
+      background_monitor: Mbikëqyrës Sidekiq
       pod_network: Rrjet nyjeje
     dashboard:
       pod_status: Gjendje nyjeje

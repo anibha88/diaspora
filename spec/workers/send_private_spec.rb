@@ -15,7 +15,7 @@ describe Workers::SendPrivate do
     expect(DiasporaFederation::Federation::Sender).to receive(:private).with(
       sender_id, obj_str, targets
     ).and_return({})
-    expect(Workers::SendPrivate).not_to receive(:perform_in)
+    expect(Workers::SendPrivate).not_to receive(:set)
 
     Workers::SendPrivate.new.perform(sender_id, obj_str, targets)
   end
@@ -24,9 +24,8 @@ describe Workers::SendPrivate do
     expect(DiasporaFederation::Federation::Sender).to receive(:private).with(
       sender_id, obj_str, targets
     ).and_return(failing_targets)
-    expect(Workers::SendPrivate).to receive(:perform_in).with(
-      kind_of(Integer), sender_id, obj_str, failing_targets, 1
-    )
+    expect(Workers::SendPrivate).to receive(:set).with(wait: kind_of(Numeric)).and_return(Workers::SendPrivate)
+    expect(Workers::SendPrivate).to receive(:perform_later).with(sender_id, obj_str, failing_targets, 1)
 
     Workers::SendPrivate.new.perform(sender_id, obj_str, targets)
   end
@@ -35,7 +34,7 @@ describe Workers::SendPrivate do
     expect(DiasporaFederation::Federation::Sender).to receive(:private).with(
       sender_id, obj_str, targets
     ).and_return(failing_targets)
-    expect(Workers::SendPrivate).not_to receive(:perform_in)
+    expect(Workers::SendPrivate).not_to receive(:set)
 
     expect {
       Workers::SendPrivate.new.perform(sender_id, obj_str, targets, 9)
@@ -50,10 +49,11 @@ describe Workers::SendPrivate do
       sender_id, obj_str, targets
     ).and_return(targets).twice
 
-    expect(Workers::SendPrivate).to receive(:perform_in).with(a_kind_of(Numeric), sender_id, obj_str, targets, 19)
+    expect(Workers::SendPrivate).to receive(:set).with(wait: kind_of(Numeric)).and_return(Workers::SendPrivate)
+    expect(Workers::SendPrivate).to receive(:perform_later).with(sender_id, obj_str, targets, 19)
     Workers::SendPrivate.new.perform(sender_id, obj_str, targets, 18)
 
-    expect(Workers::SendPrivate).not_to receive(:perform_in)
+    expect(Workers::SendPrivate).not_to receive(:set)
     expect {
       Workers::SendPrivate.new.perform(sender_id, obj_str, targets, 19)
     }.to raise_error Workers::SendBase::MaxRetriesReached

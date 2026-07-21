@@ -11,7 +11,7 @@ module Diaspora
 
           return if targets.empty?
 
-          Workers::SendPublic.perform_async(sender.id, entity.to_s, targets, magic_envelope.to_xml)
+          Workers::SendPublic.perform_later(sender.id, entity.to_s, targets, magic_envelope.to_xml)
         end
 
         def target_urls(people)

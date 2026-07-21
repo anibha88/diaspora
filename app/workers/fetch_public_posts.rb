@@ -6,7 +6,7 @@
 
 module Workers
   class FetchPublicPosts < Base
-    sidekiq_options queue: :medium
+    queue_as :medium
 
     def perform(diaspora_id)
       Diaspora::Fetcher::Public.new.fetch!(diaspora_id)

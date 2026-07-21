@@ -92,7 +92,7 @@ ja:
       weekly_user_stats: 週次のユーザー統計
       pod_stats: ポッドの状態
       report: 報告
-      sidekiq_monitor: Sidekiq モニター
+      background_monitor: Sidekiq モニター
       pod_network: ポッド ネットワーク
     dashboard:
       pod_status: ポッド ステータス

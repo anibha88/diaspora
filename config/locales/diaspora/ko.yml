@@ -63,7 +63,7 @@ ko:
       weekly_user_stats: 주간 사용자 통계
       pod_stats: 팟 통계
       report: 보고서
-      sidekiq_monitor: 사이드킥 모니터
+      background_monitor: 사이드킥 모니터
     user_search:
       you_currently:
         other: 현재 %{user_invitation} 초대가 남았습니다 %{link}

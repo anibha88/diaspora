@@ -93,7 +93,7 @@ vi:
       weekly_user_stats: Thống kê người dùng hàng tuần
       pod_stats: Thống kê
       report: Lượt báo cáo
-      sidekiq_monitor: Thiết lập Sidekiq
+      background_monitor: Thiết lập Sidekiq
       pod_network: Liên hợp
     dashboard:
       pod_status: Trạng thái

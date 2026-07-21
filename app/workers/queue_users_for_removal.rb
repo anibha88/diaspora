@@ -6,7 +6,7 @@
 
 module Workers
   class QueueUsersForRemoval < Base
-    sidekiq_options queue: :low
+    queue_as :low
 
     def perform
       # Queue users for removal due to inactivity
@@ -17,7 +17,7 @@ module Workers
           .limit(AppConfig.settings.maintenance.remove_old_users.limit_removals_to_per_day)
 
         # deliver to be closed emails to account holders
-        # and queue accounts for closing to sidekiq
+        # and queue accounts for closing via background jobs
         # for those who have not signed in, skip warning and queue removal
         # in +1 days
         users.each do |user|
@@ -31,7 +31,7 @@ module Workers
             # send a warning
             Maintenance.account_removal_warning(user).deliver_now
           end
-          Workers::RemoveOldUser.perform_in(remove_at+1.day, user.id)
+          Workers::RemoveOldUser.set(wait_until: remove_at + 1.day).perform_later(user.id)
         end
       end
     end

@@ -71,7 +71,7 @@ es-MX:
       weekly_user_stats: Estadísticas semanales de usuario
       pod_stats: Estadísticas del servidor
       report: Informes
-      sidekiq_monitor: Monitor Sidekiq
+      background_monitor: Monitor Sidekiq
     user_search:
       you_currently:
         other: Actuamente tienes %{user_invitation} invitaciones para enviar %{link}

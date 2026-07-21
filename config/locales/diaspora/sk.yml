@@ -62,7 +62,7 @@ sk:
       user_search: Vyhľadávanie používateľov
       weekly_user_stats: Štatistiky používateľa za týždeň
       pod_stats: Štatistiky servera
-      sidekiq_monitor: Monitor Sidekiq
+      background_monitor: Monitor Sidekiq
     user_search:
       you_currently:
         zero: nateraz ti ostalo %{count} pozvánok %{link}

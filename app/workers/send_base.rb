@@ -2,7 +2,9 @@
 
 module Workers
   class SendBase < Base
-    sidekiq_options queue: :medium, retry: 0
+    queue_as :medium
+    # Retries are handled manually via schedule_retry; disable ActiveJob's built-in retry
+    retry_on StandardError, attempts: 1
 
     MAX_RETRIES = AppConfig.environment.sidekiq.retry.get.to_i
 
@@ -19,7 +21,7 @@ module Workers
 
     private
 
-    # based on Sidekiq::Middleware::Server::RetryJobs#seconds_to_delay
+    # Attempt delay formula with polynomial backoff and jitter
     def seconds_to_delay(count)
       ((count + 3)**4) + (rand(30) * (count + 1))
     end

@@ -93,7 +93,7 @@ zh-TW:
       weekly_user_stats: 使用者統計週報
       pod_stats: 豆莢統計資料
       report: 投訴
-      sidekiq_monitor: Sidekiq 監視器
+      background_monitor: Sidekiq 監視器
       pod_network: 豆莢網路
     dashboard:
       pod_status: 豆莢狀態
