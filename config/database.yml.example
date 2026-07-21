@@ -24,7 +24,7 @@ common: &common
   <<: *postgresql
   #<<: *mysql
 
-  # Should match environment.sidekiq.concurrency
+  # Should match environment.good_job.concurrency
   #pool: 25
 
 ##################################################

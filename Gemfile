@@ -45,13 +45,10 @@ gem "rqrcode", "3.2.0"
 
 gem "simple_captcha2", "0.5.0", require: "simple_captcha"
 
-# Background processing
+# Background processing (Postgres-backed via GoodJob; scheduling is
+# provided by GoodJob's built-in cron, replacing sidekiq-cron)
 
-gem "sidekiq", "7.3.10"
-
-# Scheduled processing
-
-gem "sidekiq-cron", "2.3.1"
+gem "good_job", "4.9.2"
 
 # Compression
 

@@ -42,9 +42,6 @@ if [ -z $DIA_NODB ] || [ ! $DIA_NODB -eq 1 ]; then
   else
     wait_for_port mysql 3306
   fi
-
-  # ----- Wait for Redis -----
-  wait_for_port redis 6379
 fi
 
 cd /diaspora

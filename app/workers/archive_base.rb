@@ -26,17 +26,29 @@ module Workers
       raise NotImplementedError, "You must override perform_archive_job"
     end
 
+    # Count how many ArchiveBase-derived jobs are currently in-flight
+    # (excluding this one). Under Sidekiq this used Sidekiq::Workers.new;
+    # under GoodJob the equivalent is a query against the good_jobs table
+    # for rows that have been picked up (performed_at set) but not yet
+    # finished (finished_at nil), whose job_class is one of the
+    # ArchiveBase subclasses.
     def currently_running_archive_jobs
-      Sidekiq::Workers.new.count do |process_id, thread_id, work|
-        !(Process.pid.to_s == process_id.split(":")[1] && Thread.current.object_id.to_s(36) == thread_id) &&
-          ArchiveBase.subclasses.map(&:to_s).include?(work["payload"]["class"])
-      end
-    rescue RedisClient::CannotConnectError
-      # If code gets to this point and there is no Redis conenction, we're
-      # running in a Test environment and have not mocked Sidekiq::Workers, so
-      # we're not testing the concurrency-limiting behavior.
-      # There is no way a production pod will run into this code, as diaspora*
-      # refuses to start without redis.
+      archive_classes = ArchiveBase.subclasses.map(&:to_s)
+      return 0 if archive_classes.empty?
+
+      scope = GoodJob::Job.where(job_class: archive_classes)
+                          .where.not(performed_at: nil)
+                          .where(finished_at: nil)
+
+      # Exclude the currently-executing job so a solo run still counts as
+      # zero (mirrors the pid+thread check the Sidekiq version had).
+      scope = scope.where.not(active_job_id: job_id) if respond_to?(:job_id) && job_id
+      scope.count
+    rescue ActiveRecord::StatementInvalid, ActiveRecord::ConnectionNotEstablished
+      # If we can't reach the good_jobs table (e.g. running specs that
+      # never installed the GoodJob migration), fall through as if no
+      # other job were running — this preserves the previous test-env
+      # tolerance the Sidekiq version had for a missing Redis.
       0
     end
   end

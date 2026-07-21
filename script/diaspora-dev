@@ -229,14 +229,16 @@ dia_is_db_running() {
   dia_docker_compose ps --services --filter status=running | grep -qx $DIASPORA_DOCKER_DB
 }
 
-dia_is_redis_running() {
-  # Check if redis container is running
-  dia_docker_compose ps --services --filter status=running | grep -qx redis
-}
-
 dia_get_db() {
   # Get currently configured or assumed db type
   grep -q '^  <<: \*mysql' "$DIASPORA_CONFIG_DB" 2>/dev/null && echo mysql || echo postgresql
+}
+
+dia_is_redis_running() {
+  # Post-GoodJob migration there is no redis service; keep this as a
+  # no-op returning false so existing "stop redis if we started it"
+  # bookkeeping harmlessly stays empty.
+  return 1
 }
 
 dia_test_db_url() {
@@ -587,7 +589,7 @@ dia_build() {
 }
 
 dia_pull() {
-  dia_docker_compose pull redis $(dia_get_db)
+  dia_docker_compose pull $(dia_get_db)
 }
 
 dia_bundle() {

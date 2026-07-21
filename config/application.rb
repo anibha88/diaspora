@@ -36,6 +36,11 @@ module Diaspora
     # Allow to decode Time from serialized columns
     config.active_record.yaml_column_permitted_classes = [Time]
 
+    # Background job backend. All Workers::* jobs are ActiveJob-based and
+    # execute on GoodJob (Postgres-backed). Runtime + cron configuration
+    # lives in config/initializers/good_job.rb.
+    config.active_job.queue_adapter = :good_job
+
     # Enable escaping HTML in JSON.
     config.active_support.escape_html_entities_in_json = true
 

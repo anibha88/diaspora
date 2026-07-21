@@ -11,13 +11,14 @@ defaults:
     certificate_authorities:
     redis:
     require_ssl: true
-    sidekiq:
+    good_job:
       concurrency: 5
       retry: 10
       backtrace: 15
-      dead_jobs_limit: 5000
-      dead_jobs_timeout: 3628800 # 6 weeks
-      log: 'log/sidekiq.log'
+      # Preserved-job retention (previously dead_jobs_timeout). GoodJob
+      # cleans finished job records older than this many seconds.
+      preserved_jobs_timeout: 3628800 # 6 weeks
+      log: 'log/good_job.log'
     s3:
       enable: false
       key:
@@ -44,7 +45,7 @@ defaults:
     stderr_log:
     stdout_log:
     web_timeout: 90
-    sidekiq_workers: 1
+    worker_processes: 1
   map:
     mapbox:
       enabled: false

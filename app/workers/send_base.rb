@@ -2,9 +2,11 @@
 
 module Workers
   class SendBase < Base
+    # queue :medium; retry: 0 means "no automatic retries — SendBase
+    # schedules its own via #schedule_retry / perform_in".
     sidekiq_options queue: :medium, retry: 0
 
-    MAX_RETRIES = AppConfig.environment.sidekiq.retry.get.to_i
+    MAX_RETRIES = AppConfig.environment.good_job.retry.get.to_i
 
     protected
 

@@ -35,9 +35,6 @@ silence_fork_callback_warning
 before_fork do
   # we're preloading app in production, so force-reconenct the DB
   ActiveRecord::Base.connection_pool.disconnect!
-
-  # drop the Redis connection
-  Sidekiq.redis {|redis| redis.client.disconnect }
 end
 
 before_worker_boot do

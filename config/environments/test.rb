@@ -77,6 +77,13 @@ Rails.application.configure do
   # Annotate rendered view with file names.
   # config.action_view.annotate_rendered_view_with_filenames = true
 
+  # Background jobs: use ActiveJob's :test adapter (jobs enqueue but do
+  # not run) to match the previous Sidekiq :fake test mode. Specs that
+  # need jobs to actually run wrap enqueues in the `inlined_jobs` helper,
+  # which flips the adapter to :test locally and drains via
+  # perform_enqueued_jobs.
+  config.active_job.queue_adapter = :test
+
   # for fixture_builder
   ENV["FIXTURES_PATH"] = "spec/fixtures"
 end

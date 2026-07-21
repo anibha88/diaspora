@@ -51,7 +51,7 @@
                     = unreviewed_reports_count
                 = t("admins.admin_bar.report")
             %li= link_to t("admins.admin_bar.pod_network"), admin_pods_path
-            %li= link_to t("admins.admin_bar.sidekiq_monitor"), sidekiq_path
+            %li= link_to t("admins.admin_bar.good_job_monitor"), good_job_path
       - elsif current_user.moderator?
         %li
           %a{href: report_index_path}
